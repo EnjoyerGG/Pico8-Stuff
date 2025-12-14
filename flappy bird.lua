@@ -32,3 +32,14 @@ function _update()
     update_start()
   end
 end
+
+function _draw()
+  --call 30tps after update--
+  if state=="game" then
+    draw_game()
+  elseif state=="game over" then
+    draw_game_over()
+  elseif state=="start" then
+    draw_start()
+  end
+end
