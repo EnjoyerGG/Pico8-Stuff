@@ -44,4 +44,12 @@ function _update()
     end
   end
 end
+
+function _draw()
+  --draw the particles
+  cls()
+  for p in all(parts) do
+    circfill(p.x,p.y,p.r,p.c)
+  end
+end
       
