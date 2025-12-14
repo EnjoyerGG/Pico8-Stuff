@@ -43,3 +43,58 @@ function _draw()
     draw_start()
   end
 end
+
+function update_game()
+  py+=gravity
+  if btnp(x) then
+    flap=flap_amt
+  end
+
+  if flap>0 then
+    flap-=1
+    pspr=1
+  else
+    pspr=2
+  end
+
+  py-=flap
+
+  if py>=120 then
+    py=120
+  elseif py<0 then
+    py=0
+  end
+
+  u_pipes()
+  u_score()
+  collide()
+end
+
+
+function draw_game()
+  cls()
+  map()
+  d_pipes()
+  spr(pspr,px,py)
+  print("scores: "..score)
+  print(col)
+end
+
+
+function update_game_over()
+  if btnp(z) then
+    _init()
+  end
+end
+
+function draw_game_over()
+  cls()
+  print("game over",44,60)
+  print("press z to restart",28,68)
+end
+
+function update_start()
+  if btnp(z) then
+    state="game"
+  end
+end
