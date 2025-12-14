@@ -130,3 +130,25 @@ function d_pipes()
   --draw top pipes--
   spr(7,p1bx,p1by,2,16)
 end
+
+--score/collision--
+function u_score()
+  if p1bx==px then
+    score+=1
+  end
+end
+
+function collide()
+  if abs(px-p1bx)<4 then
+    if py<p1by then
+      --collide--
+      col=true
+      state="game over"
+    elseif py<p1by-gap then
+      col=true
+      state="game over"
+    else
+      col=false
+    end
+  end
+end
