@@ -105,3 +105,28 @@ function draw_start()
   print("flappy bird",44,60)
   print("press z to start",28,68)
 end
+
+
+--pipes--
+function i_pipes()
+  --set up pipes
+  gap=30
+  p1bx=129
+  p1by=rnd(128)
+end
+
+function u_pipes()
+  --update pipes
+  p1bx-=1
+  if p1bx<-16 then
+    p1by=8+gap+rnd(128-gap-8)  --set random height
+    p1bx=128
+  end
+end
+
+function d_pipes()
+  --draw bottom pipes--
+  spr(7,p1bx,p1by-128-gap,2,16)
+  --draw top pipes--
+  spr(7,p1bx,p1by,2,16)
+end
