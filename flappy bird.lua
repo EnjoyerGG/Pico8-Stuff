@@ -98,3 +98,10 @@ function update_start()
     state="game"
   end
 end
+
+function draw_start()
+  cls()
+  map()
+  print("flappy bird",44,60)
+  print("press z to start",28,68)
+end
