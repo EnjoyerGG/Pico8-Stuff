@@ -82,11 +82,7 @@ function startgame()
 	
 	enemies={}	--enemy obj
 	
-	local myen={}
-	myen.x=60
-	myen.y=5
-	myen.spr=21
-	add(enemies,myen)
+	spawnen()
 end
 
 -->8
@@ -148,7 +144,7 @@ end
 
 function blink()
 	--use the tabe to control blink time--
-	local banim={5,5,6,6,7,7,6,6,5,5}
+	local banim={5,5,5,5,5,6,6,7,7,6,6,5,5}
 	
 	if blinkt>#banim then
 		blinkt=1
@@ -159,6 +155,44 @@ end
 
 function drwmyspr(myspr)
 	spr(myspr.spr,myspr.x,myspr.y)
+end
+
+
+function col(a,b)
+	--lots of math
+	local a_left=a.x
+	local a_top=a.y
+	local a_right=a.x+7
+	local a_bottom=a.y+7
+	
+	
+	local b_left=b.x
+	local b_top=b.y
+	local b_right=b.x+7
+	local b_bottom=b.y+7
+	
+	if a_top>b_bottom then
+		return false
+	end
+	if b_top>a_bottom then
+		return false
+	end
+	if a_left>b_right then
+		return false
+	end
+	if b_left>a_right then
+		return false
+	end
+	
+	return true
+end
+
+function spawnen()
+	local myen={}
+	myen.x=rnd(120)
+	myen.y=-8
+	myen.spr=21
+	add(enemies,myen)
 end
 -->8
 --update--
@@ -201,6 +235,20 @@ function update_game()
 	ship.x+=ship.spdx
 	ship.y+=ship.spdy
 	
+	--checking if we hit the edge
+	if ship.x>120 then
+		ship.x=120
+	end
+	if ship.x<0 then
+		ship.x=0
+	end
+	if ship.y>120 then
+		ship.y=120
+	end
+	if ship.y<0 then
+		ship.y=0
+	end
+	
 	--moving the bullet--
 	for i=#buls,1,-1 do
 		local mybul=buls[i]
@@ -226,6 +274,32 @@ function update_game()
 		end
 	end
 	
+	--collision bullet x enemies
+	for myen in all(enemies) do
+		for mybul in all(buls) do
+			if col(myen,mybul) then
+				del(enemies,myen)
+				del(buls,mybul)
+				sfx(2)
+				spawnen()
+			end
+		end
+	end
+	
+	--collision ship x enemies
+	for myen in all(enemies) do
+		if col(myen,ship) then
+			lives-=1
+			sfx(1)
+			del(enemies,myen)
+		end
+	end
+	
+	if lives<=0 then
+		mode="over"
+		return
+	end
+	
 	--animate flame--
 	flamespr+=1
 	if flamespr>9 then
@@ -236,14 +310,7 @@ function update_game()
 	if muzzle>0 then
 		muzzle-=1
 	end
-	
-	--checking if we hit the edge
-	if ship.x>120 then
-		ship.x=0
-	end
-	if ship.x<0 then
-		ship.x=120
-	end
+
 	
 	animatestars()
 end	
@@ -286,7 +353,6 @@ function draw_game()
 	
 	print("score:"..score,40,1,12)
 	
-	lives=1
 	for i=1,4 do
 		if lives>=i then
 			spr(13,i*9-8,1)
@@ -329,3 +395,5 @@ __gfx__
 00999900000000000000000000000000000000000300003030000003030000300330033000000000000000000000000000000000000000000000000000000000
 __sfx__
 000100003555033550305502d5502a5502755023550215501f5501c5501a550185501655015550145501255011550105500f5500e5500c5500a55008550065500555003550015500055000550290002a0002a000
+00010000000002d6502d6402c640296502564018630116200d6300964007650056500465004650046500465004650066500965000000000000000000000000000000000000000000000000000000000000000000
+00010000357500c750326501a6400b520056200352001520005100271000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
